@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024 法國國際商務展</title>
+    <link rel="stylesheet" href="./bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <nav>
+        <img src="./img/logo.jpg" alt="Logo">
+        <a href="home.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="business.html">Business</a>
+        <a href="tickets.html">Tickets</a>
+    </nav>
+    <main>
+        <div class="business text-center">
+            <div>
+                <div>
+                    <h5>設計展資訊區</h5>
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti distinctio voluptas consequuntur, quisquam quam molestiae, id repellendus maiores sapiente aut omnis vero necessitatibus architecto cum beatae recusandae voluptatibus ipsum culpa.</p>
+                </div>
+                <img src="./img/news1.jpg">
+            </div>
+
+            <div>
+                <img src="./img/news2.jpg">
+                <div>
+                    <h5>作品介紹區</h5>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facere praesentium ea officia aliquid, vero ipsam consectetur delectus, beatae optio ratione repellat repellendus, illum fugiat vitae dolore voluptates eos in qui.</p>
+                    <p class="readmore">Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique id magni aliquam distinctio incidunt autem quam ducimus quidem quos accusamus, nostrum iste excepturi explicabo eum ipsa rerum sequi tenetur eligendi.</p>
+                    <button onclick="readmore()" class="read-btn btn btn-primary">Read more</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <footer>
+        <div>
+            <img src="./img/google.png" alt="google">
+            <img src="./img/facebook.png" alt="facebook">
+        </div>
+        <p>Copyright &copy; 2024 FIBEX All Rights Reserved</p>
+    </footer>
+</body>
+<script src="./jquery/jquery.js"></script>
+<script src="./bootstrap/bootstrap.js"></script>
+<script>
+    function readmore(){
+        $(".readmore").slideToggle(200);
+        let btn = $(".read-btn"); 
+        btn.text(btn.text() === "Read more" ? "Read less" : "Read more");
+    }
+</script>
+</html>
