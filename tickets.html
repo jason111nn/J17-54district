@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024 法國國際商務展</title>
+    <link rel="stylesheet" href="./bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        #drag-box,
+        #drop-box {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        #drag-box div,
+        .drop {
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background-color: #e9ecef;
+            border: 1px solid #6c757d;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .drop {
+            border: 2px dashed #6c757d;
+        }
+
+        .drop.filled {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <img src="./img/logo.jpg" alt="Logo">
+        <a href="home.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="business.html">Business</a>
+        <a href="tickets.html">Tickets</a>
+    </nav>
+    <main>
+        <form onsubmit="formSubmit(event)">
+            <h1>Tickets</h1>
+            <input type="text" name="firstname" id="firstname" placeholder="First name" required>
+            <input type="text" name="lastname" id="lastname" placeholder="Last name" required>
+            <input type="text" name="phone" id="phone" placeholder="Phone" required>
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <p>由小到大排列</p>
+            <div id="drag-box">
+                <!-- 動態生成驗證碼區塊 -->
+            </div>
+            <div id="drop-box">
+                <div class="drop" data-index="1"></div>
+                <div class="drop" data-index="2"></div>
+                <div class="drop" data-index="3"></div>
+                <div class="drop" data-index="4"></div>
+            </div>
+            <div>
+                <button type="button" onclick="veri()">Reset</button>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </main>
+    <footer>
+        <div>
+            <img src="./img/google.png" alt="google">
+            <img src="./img/facebook.png" alt="facebook">
+        </div>
+        <p>Copyright &copy; 2024 FIBEX All Rights Reserved</p>
+    </footer>
+</body>
+<script src="./jquery/jquery.js"></script>
+<script src="./jquery/jquery-ui.min.js"></script>
+<script src="./bootstrap/bootstrap.js"></script>
+<script>
+    let verificationCode = [];
+
+    function veri() {
+        const $dragBox = $("#drag-box");
+        const $dropBox = $(".drop");
+        $dragBox.empty();
+        $dropBox.empty().removeClass("filled").text("");
+        verificationCode = [];
+        for (let i = 1; i <= 4; i++) {
+            const code = Math.floor(Math.random() * 99 + 10);
+            verificationCode.push(code);
+
+            const $codeDiv = $(`<div class="draggable" id="veri${code}">${code}</div>`);
+            $dragBox.append($codeDiv);
+
+            $codeDiv.draggable({
+                revert: "invalid",
+            });
+        }
+
+        $dropBox.droppable({
+            accept: ".draggable",
+            drop: function (event, ui) {
+                const $this = $(this);
+                if ($this.hasClass("filled")) {
+                    return;
+                }
+                const draggedNumber = ui.draggable.text();
+                $this.text(draggedNumber).addClass("filled");
+                ui.draggable.hide();
+            }
+        });
+    }
+
+    function formSubmit(event) {
+        event.preventDefault();
+        const userCode = [];
+        $(".drop").each(function () {
+            const num = $(this).text();
+            if (num) {
+                userCode.push(Number(num));
+            }
+        });
+
+        const sortedCode = [...verificationCode].sort((a, b) => a - b);
+        if (JSON.stringify(userCode) === JSON.stringify(sortedCode)) {
+            fetch("./post.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    firstname: $("#firstname").val(),
+                    lastname: $("#lastname").val(),
+                    phone: $("#phone").val(),
+                    password: $("#password").val(),
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data) {
+                        alert("送出成功");
+                        location.href = "./home.html";
+                    } else {
+                        alert("送出失敗，請稍後再試！");
+                    }
+                })
+        } else {
+            alert("驗證碼排列錯誤");
+            veri();
+        }
+    }
+    $(document).ready(() => {
+        veri();
+    });
+
+</script>
+
+</html>
